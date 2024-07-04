@@ -1,6 +1,9 @@
 import React, { useRef } from 'react';
+import { useTextContext } from '../context/TextContext.jsx';
 
 export default function Editor() {
+
+    const { setText } = useTextContext();
 
     // Reference to editor window (text area).
     const editorDivRef = useRef(null);
@@ -37,6 +40,10 @@ export default function Editor() {
         document.addEventListener('mouseup', mouseUpHandler);
     };
 
+    const handleTextAreaChange = (e) => {
+        setText(e.target.value);
+    };
+
     return (
         <div ref={editorDivRef} className="md:w-1/2 md:h-[100vh] h-1/2 w-[100vw] relative">
             <div
@@ -48,7 +55,9 @@ export default function Editor() {
                 w-full h-full p-4 bg-slate-950
                 text-xl
                 focus:outline-none
-                ">
+                "
+                onChange={handleTextAreaChange}
+            >
             </textarea>
         </div>
     );
