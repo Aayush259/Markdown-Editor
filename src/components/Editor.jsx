@@ -56,6 +56,7 @@ export default function Editor() {
                 text-xl
                 focus:outline-none
                 "
+                placeholder='Start writing here'
                 onChange={handleTextAreaChange}
             >
             </textarea>
