@@ -11,6 +11,7 @@ export default function Preview() {
 
     const newLineReg = useMemo(() => /\r?\n/, []);  // Regex for new line.
     const headingReg = useMemo(() => /^(#{1,6})\s/);    // Regex for heading tags.
+    const unorderedListReg = useMemo(() => /^-{1}\s/);  // Regex for unordered list.
 
     // This function converts the text in the markdown format and returns it.
     const convertToMarkdown = useCallback(() => {
@@ -26,14 +27,12 @@ export default function Preview() {
         // Updating linesInText with JSX of their respective lines.
         linesInText = linesInText.map((line) => {
             
-            // Checking for heading regex match.
-            const headingMatch = line.match(headingReg);
-            
             // If heading matched, then return the heading JSX.
-            if (headingMatch) {
+            if (line.match(headingReg)) {
+                const headingMatch = line.match(headingReg);
                 const level = headingMatch[1].length;   // Getting heading level.
                 const content = line.slice(level + 1).trim();   // Getting actual content.
-                const HeadingTag = `h${level}`; // GEtting heading tag based on its level.
+                const HeadingTag = `h${level}`; // Getting heading tag based on its level.
 
                 // Talwind CSS classes for all heading tags.
                 const headingSize = {
@@ -47,8 +46,10 @@ export default function Preview() {
 
                 // Returning respective heading tag with its content.
                 return <HeadingTag className={`${headingSize[level]} ml-1 mt-5 mb-4 font-bold`}>{content}</HeadingTag>
+            } else if (line.match(unorderedListReg)) {
+                return <li className='ml-4 before:mr-[-10px]'>{line.slice(1).trim()}</li>
             } else {
-                return <p>{line}</p>
+                return <p className='mt-1 mb-4'>{line}</p>
             }
         });
         
@@ -64,7 +65,7 @@ export default function Preview() {
     return (
         <div className="flex-1 p-2 h-[100vh] overflow-y-auto">
             {
-                markDown.map((item, index) => <div key={index} >{item}</div>)
+                markDown.map((item, index) => <div key={index} className="text-[1.1rem]" >{item}</div>)
             }
         </div>
     );
