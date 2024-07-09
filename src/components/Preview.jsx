@@ -10,9 +10,10 @@ export default function Preview() {
     const [markDown, setMarkDown] = useState([]);
 
     const newLineReg = useMemo(() => /\r?\n/, []);  // Regex for new line.
-    const headingReg = useMemo(() => /^(#{1,6})\s/);    // Regex for heading tags.
-    const unorderedListReg = useMemo(() => /^-{1}\s/);  // Regex for unordered list.
-    const boldReg = useMemo(() => /\*{2}(.*?)\*{2}/g);    // Regex for bold/strong.
+    const headingReg = useMemo(() => /^(#{1,6})\s/, []);    // Regex for heading tags.
+    const unorderedListReg = useMemo(() => /^-{1}\s/, []);  // Regex for unordered list.
+    const boldReg = useMemo(() => /\*{2}(.*?)\*{2}/g, []);    // Regex for bold/strong.
+    const italicReg = useMemo(() => /\*{1}(.*?)\*{1}/g, []);    // Regex for italic/em.
 
     // This function converts the text in the markdown format and returns it.
     const convertToMarkdown = useCallback(() => {
@@ -47,17 +48,20 @@ export default function Preview() {
 
                 // Returning respective heading tag with its content.
                 return <HeadingTag className={`${headingSize[level]} ml-1 mt-5 mb-4 font-bold`}>{content}</HeadingTag>
-            } else if (line.match(unorderedListReg)) {
-                return <li className='ml-4 before:mr-[-10px]'>{line.slice(1).trim()}</li>
-            } else if (line.match(boldReg)) {
-
-                // Line with bold formatting.
-                const lineWithBoldText = line.replace(boldReg, '<strong>$1</strong>');
-                
-                return <p className='mt-1 mb-4' dangerouslySetInnerHTML={{__html: lineWithBoldText}}></p>;
             }
             else {
-                return <p className='mt-1 mb-4'>{line}</p>
+                // Unordered list formatting.
+                if (line.match(unorderedListReg)) {
+                    line = `<li class="ml-4 before:mr-[-10px]">${line.slice(1).trim()}</li>`
+                };
+
+                // Bold formatting.
+                const lineWithBoldText = line.replace(boldReg, '<strong>$1</strong>');
+
+                // Italic Foramtting
+                const lineWithItalicText = lineWithBoldText.replace(italicReg, '<em>$1</em>');
+
+                return <p className='mt-1 mb-1' dangerouslySetInnerHTML={{__html: lineWithItalicText}}></p>;
             }
         });
         
