@@ -14,6 +14,7 @@ export default function Preview() {
     const unorderedListReg = useMemo(() => /^-{1}\s/, []);  // Regex for unordered list.
     const boldReg = useMemo(() => /\*{2}(.*?)\*{2}/g, []);    // Regex for bold/strong.
     const italicReg = useMemo(() => /\*{1}(.*?)\*{1}/g, []);    // Regex for italic/em.
+    const strikeThroughReg = useMemo(() => /~{2}(.*?)~{2}/g, []);   // Regex for strike through.
 
     // This function converts the text in the markdown format and returns it.
     const convertToMarkdown = useCallback(() => {
@@ -58,10 +59,16 @@ export default function Preview() {
                 // Bold formatting.
                 const lineWithBoldText = line.replace(boldReg, '<strong>$1</strong>');
 
-                // Italic Foramtting
+                // Italic Foramtting.
                 const lineWithItalicText = lineWithBoldText.replace(italicReg, '<em>$1</em>');
 
-                return <p className='mt-1 mb-1' dangerouslySetInnerHTML={{__html: lineWithItalicText}}></p>;
+                // Strike through Formatting.
+                const lineWithStrikeText = lineWithItalicText.replace(strikeThroughReg, '<del>$1</del>');
+
+                // Final result to display.
+                const finalResult = lineWithStrikeText;
+
+                return <p className='mt-1 mb-1' dangerouslySetInnerHTML={{__html: finalResult}}></p>;
             }
         });
         
