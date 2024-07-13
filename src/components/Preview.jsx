@@ -16,6 +16,7 @@ export default function Preview() {
     const italicReg = useMemo(() => /\*{1}(.*?)\*{1}/g, []);    // Regex for italic/em.
     const strikeThroughReg = useMemo(() => /~{2}(.*?)~{2}/g, []);   // Regex for strike through.
     const linkReg = useMemo(() => /\[(.*?)\]\((.*?)\)/g, []);    // Regex for links.
+    const imgReg = useMemo(() => /!\[(.*?)\]\((.*?)\)/g, []);    // Regex for images.
 
     // This function converts the text in the markdown format and returns it.
     const convertToMarkdown = useCallback(() => {
@@ -66,8 +67,11 @@ export default function Preview() {
                 // Strike through Formatting.
                 const lineWithStrikeText = lineWithItalicText.replace(strikeThroughReg, '<del>$1</del>');
 
+                // Image formatting.
+                const lineWithImage = lineWithStrikeText.replace(imgReg, '<img class="max-w-full" src="$2" alt="$1" />');
+
                 // Link formatting.
-                const lineWithLinkText = lineWithStrikeText.replace(linkReg, '<a class="text-sky-400 hover:underline underline-offset-2" href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
+                const lineWithLinkText = lineWithImage.replace(linkReg, '<a class="text-sky-400 hover:underline underline-offset-2" href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
 
                 // Final result to display.
                 const finalResult = lineWithLinkText;
