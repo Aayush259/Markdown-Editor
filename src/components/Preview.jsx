@@ -17,6 +17,7 @@ export default function Preview() {
     const strikeThroughReg = useMemo(() => /~{2}(.*?)~{2}/g, []);   // Regex for strike through.
     const linkReg = useMemo(() => /\[(.*?)\]\((.*?)\)/g, []);    // Regex for links.
     const imgReg = useMemo(() => /!\[(.*?)\]\((.*?)\)/g, []);    // Regex for images.
+    const hrReg = useMemo(() => /^(-{3})/g, []);    // Regex for horizontal ruler.
 
     // This function converts the text in the markdown format and returns it.
     const convertToMarkdown = useCallback(() => {
@@ -73,8 +74,11 @@ export default function Preview() {
                 // Link formatting.
                 const lineWithLinkText = lineWithImage.replace(linkReg, '<a class="text-sky-400 hover:underline underline-offset-2" href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
 
+                // Added horizontal ruler.
+                const hrRuler = lineWithLinkText.replace(hrReg, '<hr />');
+
                 // Final result to display.
-                const finalResult = lineWithLinkText;
+                const finalResult = hrRuler;
 
                 return <p className='mt-1 mb-1' dangerouslySetInnerHTML={{__html: finalResult}}></p>;
             }
