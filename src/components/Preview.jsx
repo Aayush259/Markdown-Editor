@@ -19,6 +19,7 @@ export default function Preview() {
     const linkReg = useReg(/\[(.*?)\]\((.*?)\)/g);    // Regex for links.
     const imgReg = useReg(/!\[(.*?)\]\((.*?)\)/g);    // Regex for images.
     const hrReg = useReg(/^(-{3})/g);    // Regex for horizontal ruler.
+    const inLinkCodeReg = useReg(/`([^`]+)`/g);     // Regex for inline code.
 
     // This function converts the text in the markdown format and returns it.
     const convertToMarkdown = useCallback(() => {
@@ -75,8 +76,11 @@ export default function Preview() {
                 // Link formatting.
                 const lineWithLinkText = lineWithImage.replace(linkReg, '<a class="text-sky-400 hover:underline underline-offset-2" href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
 
+                // Inline code formatting.
+                const lineWithInlineCode = lineWithLinkText.replace(inLinkCodeReg, '<span class="text-slate-200 bg-slate-800 px-2 py-[2px] rounded-full">$1</span>');
+
                 // Added horizontal ruler.
-                const hrRuler = lineWithLinkText.replace(hrReg, '<hr />');
+                const hrRuler = lineWithInlineCode.replace(hrReg, '<hr />');
 
                 // Final result to display.
                 const finalResult = hrRuler;
