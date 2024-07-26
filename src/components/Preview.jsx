@@ -1,5 +1,6 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useTextContext } from '../context/TextContext.jsx';
+import useReg from '../hooks/useReg.js';
 
 export default function Preview() {
 
@@ -9,15 +10,15 @@ export default function Preview() {
     // State for converted markdown text.
     const [markDown, setMarkDown] = useState([]);
 
-    const newLineReg = useMemo(() => /\r?\n/, []);  // Regex for new line.
-    const headingReg = useMemo(() => /^(#{1,6})\s/, []);    // Regex for heading tags.
-    const unorderedListReg = useMemo(() => /^-{1}\s/, []);  // Regex for unordered list.
-    const boldReg = useMemo(() => /\*{2}(.*?)\*{2}/g, []);    // Regex for bold/strong.
-    const italicReg = useMemo(() => /\*{1}(.*?)\*{1}/g, []);    // Regex for italic/em.
-    const strikeThroughReg = useMemo(() => /~{2}(.*?)~{2}/g, []);   // Regex for strike through.
-    const linkReg = useMemo(() => /\[(.*?)\]\((.*?)\)/g, []);    // Regex for links.
-    const imgReg = useMemo(() => /!\[(.*?)\]\((.*?)\)/g, []);    // Regex for images.
-    const hrReg = useMemo(() => /^(-{3})/g, []);    // Regex for horizontal ruler.
+    const newLineReg = useReg(/\r?\n/);  // Regex for new line.
+    const headingReg = useReg(/^(#{1,6})\s/);    // Regex for heading tags.
+    const unorderedListReg = useReg(/^-{1}\s/);  // Regex for unordered list.
+    const boldReg = useReg(/\*{2}(.*?)\*{2}/g);   // Regex for bold/strong.
+    const italicReg = useReg(/\*{1}(.*?)\*{1}/g);    // Regex for italic/em.
+    const strikeThroughReg = useReg(/~{2}(.*?)~{2}/g);   // Regex for strike through.
+    const linkReg = useReg(/\[(.*?)\]\((.*?)\)/g);    // Regex for links.
+    const imgReg = useReg(/!\[(.*?)\]\((.*?)\)/g);    // Regex for images.
+    const hrReg = useReg(/^(-{3})/g);    // Regex for horizontal ruler.
 
     // This function converts the text in the markdown format and returns it.
     const convertToMarkdown = useCallback(() => {
