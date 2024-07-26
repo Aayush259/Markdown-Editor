@@ -43,7 +43,7 @@ export default function Preview() {
         };
 
         // Heading formatting.
-        result = result.replace(headingReg, (p1, p2) => {
+        result = result.replace(headingReg, (match, p1, p2) => {
             const level = p1.length;
             const content = p2.trim();
             return `<h${level} class="${headingSize[level]} ml-1 mt-5 mb-4 font-bold">${content}</h${level}>`
